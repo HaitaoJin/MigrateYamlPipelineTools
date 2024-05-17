@@ -1,7 +1,5 @@
-# ChinaCDNToolsPrivate
-China CDN Tools Private
-
-## MigrateYamlPipeline
+# MigrateYamlPipelineTools
+Migrate Yaml Pipeline Tools
 
 ```shell
 MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\ClassicPipeline.json"
