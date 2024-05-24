@@ -52,6 +52,8 @@ namespace MigrateYamlPipeline.Migrate
                     return "Prod_";
                 case "Mooncake":
                     return "MC_";
+                case "Fairfax":
+                    return "FF_";
                 case "USNat":
                     return "USNat_";
                 case "USSec":
@@ -61,12 +63,12 @@ namespace MigrateYamlPipeline.Migrate
             }
         }
 
-        protected List<string> AllStagePrefix = new List<string> { "Test_", "PPE_", "Prod_", "MC_", "USNat_", "USSec_" };
+        protected List<string> AllStagePrefix = new List<string> { "Test_", "PPE_", "Prod_", "MC_", "USNat_", "USSec_", "FF_" };
 
-        protected List<string> ProdEnv = new List<string> { "Production", "Mooncake", "USNat", "USSec" };
+        protected List<string> ProdEnv = new List<string> { "Production", "Mooncake", "USNat", "USSec", "Fairfax" };
 
         protected List<string> TestEnv = new List<string> { "Test", "PPE" };
 
-        public abstract void Migrate();
+        public abstract Task Migrate();
     }
 }

@@ -57,7 +57,7 @@ namespace MigrateYamlPipeline.Common
         /// Migrates the YAML file to the new format.
         /// </summary>
         /// <param name="newYamlFilePath">The path of the new YAML file to create.</param>
-        public void Migrate(string newYamlFilePath)
+        public async Task Migrate(string newYamlFilePath)
         {
             if (!string.IsNullOrWhiteSpace(newYamlFilePath))
             {
@@ -69,7 +69,7 @@ namespace MigrateYamlPipeline.Common
                 m.Load(rootNode, classicPipeline, newYamlFile);
 
                 Console.WriteLine($"========= Begin Migrate: {m.GetType().Name} =========");
-                m.Migrate();
+                await m.Migrate();
                 Console.WriteLine($"========= End Migrate: {m.GetType().Name} =========\n");
             }
 

@@ -19,7 +19,27 @@ namespace MigrateYamlPipeline
         [Option('o', "output", Required = false, HelpText = "OutPut Yaml File Path")]
         public string OutPutYamlFilePath { get; set; }
 
+        [Option("org", Required = false, HelpText = "Organization")]
+        public string Organization { get; set; }
+        [Option("project", Required = false, HelpText = "Organization")]
+        public string Project { get; set; }
+        [Option("pat", Required = false, HelpText = "Organization")]
+        public string PAT { get; set; }
+
+        [Option("addpreapproval", Required = false, HelpText = "Is Add Pre Approval", Default = false, Group = "Add Pre Approval Option")]
+        public bool IsAddPreApproval { get; set; }
+
+        #region Update Environment Permissions
+        [Option("envpermissions", Required = false, HelpText = "Is Update Environment Permissions", Default = false, Group = "Update Environment Permissions Option")]
+        public bool IsUpdateEnvironmentPermissions { get; set; }
+        [Option("copyenv", Required = false, HelpText = "Copy Permissions Environment", Group = "Update Environment Permissions Option")]
+        public string CopyEnvironment { get; set; }
+        #endregion
+
         #region VSTest
+        [Option("vstest", Required = false, HelpText = "Is Migrate VSTest", Default = false, Group = "VSTest Migrate Option")]
+        public bool IsMigrateVSTest { get; set; }
+
         [Option("testpool", Required = false, HelpText = "Test Pool Type [CloudTest/CustomPool]", Default = MigrateTestPoolType.CloudTest, Group = "VSTest Migrate Option")]
         public MigrateTestPoolType TestPoolType { get; set; }
 
@@ -42,9 +62,7 @@ namespace MigrateYamlPipeline
         public string ScheduleBuildRequesterAlias { get; set; }
 
         [Option("cloudtest-maplocation", Required = false, HelpText = "Cloud Test Test Map Location", Default = @"[BuildRoot]\CloudTests\TestMap.E2E.xml", Group = "VSTest Migrate Option")]
-        public string TestMapLocation { get; set; } 
+        public string TestMapLocation { get; set; }
         #endregion
     }
-
-
 }

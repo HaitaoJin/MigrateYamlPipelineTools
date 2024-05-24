@@ -17,7 +17,7 @@ namespace MigrateYamlPipeline.Migrate
     {
         private List<string> notJobStages = new List<string>();
 
-        public override void Migrate()
+        public override Task Migrate()
         {
             var templateNode = (YamlScalarNode)rootNode.Children["extends"]["template"];
             if (templateNode.Value.Contains("NonOfficial") && stages.Any(p => ProdEnv.Contains(p.GetEnvironment())))
@@ -64,7 +64,7 @@ namespace MigrateYamlPipeline.Migrate
                 if (((YamlMappingNode)stageNode).Children.ContainsKey(new YamlScalarNode("jobs")))
                 {
                     var jobs = stageNode["jobs"];
-                    var stageJobs = ((YamlSequenceNode)jobs);
+                    var stageJobs = (YamlSequenceNode)jobs;
 
                     foreach (var jobNode in stageJobs.Children)
                     {
@@ -136,11 +136,11 @@ namespace MigrateYamlPipeline.Migrate
                                     {
                                         var taskDisplayName = ((YamlMappingNode)stepNode)["task"].ToString();
 
-                                        var e2eTaskInputs = (YamlMappingNode)stepNode["inputs"];
-                                        if (!((YamlMappingNode)e2eTaskInputs).Children.ContainsKey("parserProperties"))
-                                        {
-                                            e2eTaskInputs.Add("parserProperties", "worker:VsTestVersion=V150;VstsTestResultAttachmentUploadBehavior=Always;");
-                                        }
+                                        //var e2eTaskInputs = (YamlMappingNode)stepNode["inputs"];
+                                        //if (!e2eTaskInputs.Children.ContainsKey("parserProperties"))
+                                        //{
+                                        //    e2eTaskInputs.Add("parserProperties", "worker:VsTestVersion=V150;VstsTestResultAttachmentUploadBehavior=Always;");
+                                        //}
 
                                         if (taskDisplayName.Contains("CloudTestServerBuildTask@1"))
                                         {
@@ -191,6 +191,7 @@ namespace MigrateYamlPipeline.Migrate
             }
             Console.WriteLine("\nNot Job Stages: ");
             Console.WriteLine(string.Join("\n", notJobStages));
+            return Task.CompletedTask;
         }
     }
 }

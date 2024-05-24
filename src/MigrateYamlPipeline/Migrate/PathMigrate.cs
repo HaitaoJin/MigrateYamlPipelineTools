@@ -14,7 +14,7 @@ namespace MigrateYamlPipeline.Migrate
     /// </summary>
     public class PathMigrate : MigrateBase
     {
-        public override void Migrate()
+        public override Task Migrate()
         {
             rootNode.AllNodes.OfType<YamlScalarNode>().Where(p => p.Value.Contains("$(System.DefaultWorkingDirectory)")).ToList().ForEach(p =>
             {
@@ -27,6 +27,8 @@ namespace MigrateYamlPipeline.Migrate
                 Console.WriteLine($"Update Path: {p.Value} -> {p.Value.Replace("$(RELEASE.ARTIFACTS", "$(resources.pipeline")}");
                 p.Value = p.Value.Replace("$(RELEASE.ARTIFACTS", "$(resources.pipeline");
             });
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace MigrateYamlPipeline.Migrate
     {
         private List<string> AllStages = new List<string>();
 
-        public override void Migrate()
+        public override Task Migrate()
         {
             // Get all stage names
             AllStages = stages.Select(p => ((YamlScalarNode)p["stage"]).Value).ToList();
@@ -53,6 +53,7 @@ namespace MigrateYamlPipeline.Migrate
                     stageNode.UpdateDependsOn(newDependsOns);
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MigrateYamlPipeline.Migrate
             this.migrateOptions = migrateOptions;
         }
 
-        public override void Migrate()
+        public override Task Migrate()
         {
             foreach (var classicStage in classicStages)
             {
@@ -42,6 +42,7 @@ namespace MigrateYamlPipeline.Migrate
                     }
                 }
             }
+            return Task.CompletedTask;
         }
 
         /// <summary>
