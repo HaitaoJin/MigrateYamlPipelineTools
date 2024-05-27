@@ -85,10 +85,22 @@ namespace MigrateYamlPipeline.Common
             // Get from variables
             if (((YamlMappingNode)stage).Children.ContainsKey(new YamlScalarNode("variables")))
             {
-                var variables = (YamlSequenceNode)stage["variables"];
-                if (variables.Children.Any(p => p["name"].ToString() == "ob_release_environment"))
+                var variables = stage["variables"];
+                if (variables.NodeType == YamlNodeType.Sequence)
                 {
-                    return variables.Children.First(p => p["name"].ToString() == "ob_release_environment")["value"].ToString();
+                    var variablesNode = (YamlSequenceNode)stage["variables"];
+                    if (variablesNode.Children.Any(p => p["name"].ToString() == "ob_release_environment"))
+                    {
+                        return variablesNode.Children.First(p => p["name"].ToString() == "ob_release_environment")["value"].ToString();
+                    }
+                }
+                else if (variables.NodeType == YamlNodeType.Mapping)
+                {
+                    var variablesNode = (YamlMappingNode)stage["variables"];
+                    if (variablesNode.Children.ContainsKey(new YamlScalarNode("ob_release_environment")))
+                    {
+                        return variablesNode[new YamlScalarNode("ob_release_environment")].ToString();
+                    }
                 }
             }
 

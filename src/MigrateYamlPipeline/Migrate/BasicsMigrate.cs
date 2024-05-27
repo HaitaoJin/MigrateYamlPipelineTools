@@ -50,13 +50,26 @@ namespace MigrateYamlPipeline.Migrate
                 // Add ob_release_environment variables
                 if (((YamlMappingNode)stageNode).Children.ContainsKey(new YamlScalarNode("variables")))
                 {
-                    var variables = (YamlSequenceNode)stageNode["variables"];
-                    if (!variables.Children.Any(p => p["name"].ToString() == "ob_release_environment"))
+                    var variables = stageNode["variables"];
+
+                    if (variables.NodeType == YamlNodeType.Sequence)
                     {
-                        var environmentVariable = new YamlMappingNode();
-                        environmentVariable.Add("name", "ob_release_environment");
-                        environmentVariable.Add("value", env);
-                        variables.Children.Add(environmentVariable);
+                        var variablesNode = (YamlSequenceNode)stageNode["variables"];
+                        if (!variablesNode.Children.Any(p => p["name"].ToString() == "ob_release_environment"))
+                        {
+                            var environmentVariable = new YamlMappingNode();
+                            environmentVariable.Add("name", "ob_release_environment");
+                            environmentVariable.Add("value", env);
+                            variablesNode.Children.Add(environmentVariable);
+                        }
+                    }
+                    else if (variables.NodeType == YamlNodeType.Mapping)
+                    {
+                        var variablesNode = (YamlMappingNode)stageNode["variables"];
+                        if (!variablesNode.Children.ContainsKey(new YamlScalarNode("ob_release_environment")))
+                        {
+                            variablesNode.Add("ob_release_environment", env);
+                        }
                     }
                 }
 
