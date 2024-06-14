@@ -14,6 +14,27 @@ namespace MigrateYamlPipeline
 
         private static async Task ProcessCommandLines(CommandOptions command)
         {
+            if (!command.YamlFilePath.EndsWith("yml", StringComparison.OrdinalIgnoreCase))
+            {
+                var yamlFiles = Directory.GetFiles(Path.GetDirectoryName(command.YamlFilePath), "*.yml", SearchOption.AllDirectories);
+                foreach (var yamlFile in yamlFiles)
+                {
+                    MigrateTool batchMigrateTool = new MigrateTool(yamlFile, command.ClassicFilePath);
+                    if (command.IsUpdateEnvironmentPermissions)
+                    {
+                        batchMigrateTool.AddMigrate(new UpdateEnvironmentPermissionsMigrate(new EnvironmentMigrateOptions()
+                        {
+                            Organization = command.Organization,
+                            Project = command.Project,
+                            PAT = command.PAT,
+                            SourceEnvironment = command.CopyEnvironment
+                        }));
+                    }
+                    await batchMigrateTool.Migrate(command.OutPutYamlFilePath);
+                }
+                return;
+            }
+
             MigrateTool migrateTool = new MigrateTool(command.YamlFilePath, command.ClassicFilePath);
 
             if (command.IsMigrateVSTest)
