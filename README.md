@@ -14,13 +14,13 @@ MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\Classi
 Update Environment Permissions:
 
 ```shell
-MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\ClassicPipeline.json" --envpermissions --org xxx --project xxx --pat xxx --copyenv xxx
+MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\ClassicPipeline.json" -o None --envpermissions --org xxx --project xxx --pat xxx --copyenv xxx
 ```
 
 Add Pre Approval:
 
 ```shell
-MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\ClassicPipeline.json" --addpreapproval --org xxx --project xxx --pat xxx
+MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\ClassicPipeline.json" -o None --addpreapproval --org xxx --project xxx --pat xxx
 ```
 
 > Note: Personal Access Token (PAT) Scopes
@@ -33,7 +33,7 @@ Additional command line arguments:
 
 1. `-y, --yaml` Required. Yaml Pipeline File Path
 1. `-c, --classic` Required. Classic Pipeline File Path
-1. `-o, --output` OutPut Yaml File Path
+1. `-o, --output` OutPut Yaml File Path [None/FilePath]
 1. `--org` Organization
 1. `--project` Project
 1. `--pat` Personal Access Token (PAT)
