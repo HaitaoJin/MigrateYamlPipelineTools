@@ -127,6 +127,20 @@ namespace MigrateYamlPipeline.Common
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<List<IdentityDto>> GetApprovalUserIdAsync(string userDisplayName)
+        {   
+            HttpResponseMessage response = await GetCacheAsync($"https://vssps.dev.azure.com/{Organization}/_apis/identities?searchFilter=DisplayName&filterValue={userDisplayName}&api-version=7.1-preview.1");
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonStr = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<ListDto<IdentityDto>>(jsonStr).Value;
+            }
+            else
+            {
+                return new List<IdentityDto>();
+            }
+        }
+
         public async Task<HttpResponseMessage> GetCacheAsync(string requestUri, bool isCache = true) 
         {
             if (isCache && getCache.TryGetValue(requestUri, out var value)) {

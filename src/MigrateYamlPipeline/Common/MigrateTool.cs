@@ -73,9 +73,12 @@ namespace MigrateYamlPipeline.Common
                 Console.WriteLine($"========= End Migrate: {m.GetType().Name} =========\n");
             }
 
-            using (var writer = new StreamWriter(newYamlFile))
+            if (!string.Equals(newYamlFile, "None", StringComparison.OrdinalIgnoreCase))
             {
-                yaml.Save(writer, assignAnchors: false);
+                using (var writer = new StreamWriter(newYamlFile))
+                {
+                    yaml.Save(writer, assignAnchors: false);
+                }
             }
         }
 

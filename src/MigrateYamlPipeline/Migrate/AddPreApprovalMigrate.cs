@@ -37,38 +37,23 @@ namespace MigrateYamlPipeline.Migrate
                     if (((YamlMappingNode)stageNode).Children.ContainsKey(new YamlScalarNode("variables")))
                     {
                         var variables = stageNode["variables"];
+                        var environmentJobName = variables.GetVariableValue("ob_deploymentjob_environment");
 
-                        if (variables.NodeType == YamlNodeType.Sequence)
+                        if (!string.IsNullOrWhiteSpace(environmentJobName))
                         {
-                            var variablesNode = (YamlSequenceNode)stageNode["variables"];
-                            if (variablesNode.Children.Any(p => p["name"].ToString() == "ob_deploymentjob_environment"))
+                            var environment = devOpsHttpClient.GetEnvironmentsAsync(environmentJobName).Result.FirstOrDefault();
+                            if (environment != null)
                             {
-                                var environmentJobName = variablesNode.Children.First(p => p["name"].ToString() == "ob_deploymentjob_environment")["value"].ToString();
-                                var environment = devOpsHttpClient.GetEnvironmentsAsync(environmentJobName).Result.FirstOrDefault();
-                                if (environment != null)
+                                var approvalChecks = await devOpsHttpClient.GetApprovalCheckAsync(environment);
+                                if (!approvalChecks.Any(p => p.Type.Name == "Approval"))
                                 {
-                                    var approvalChecks = await devOpsHttpClient.GetApprovalCheckAsync(environment);
-                                    if (!approvalChecks.Any(p => p.Type.Name == "Approval"))
+                                    var userIds = new List<string>();
+                                    foreach (var userDisplayName in approvals.Select(p => p["Approver"]["DisplayName"].ToString()).ToList())
                                     {
-                                        await devOpsHttpClient.AddPreApprovalAsync(environment, approvals.Select(p => p["Approver"]["id"].ToString()).ToList());
+                                        userIds.Add((await devOpsHttpClient.GetApprovalUserIdAsync(userDisplayName)).FirstOrDefault().Id.ToString());
                                     }
-                                }
-                            }
-                        }
-                        else if(variables.NodeType == YamlNodeType.Mapping)
-                        {
-                            var variablesNode = (YamlMappingNode)stageNode["variables"];
-                            if (variablesNode.Children.ContainsKey(new YamlScalarNode("ob_deploymentjob_environment")))
-                            {
-                                var environmentJobName = variablesNode[new YamlScalarNode("ob_deploymentjob_environment")].ToString();
-                                var environment = devOpsHttpClient.GetEnvironmentsAsync(environmentJobName).Result.FirstOrDefault();
-                                if (environment != null)
-                                {
-                                    var approvalChecks = await devOpsHttpClient.GetApprovalCheckAsync(environment);
-                                    if (!approvalChecks.Any(p => p.Type.Name == "Approval"))
-                                    {
-                                        await devOpsHttpClient.AddPreApprovalAsync(environment, approvals.Select(p => p["Approver"]["id"].ToString()).ToList());
-                                    }
+
+                                    await devOpsHttpClient.AddPreApprovalAsync(environment, userIds);
                                 }
                             }
                         }

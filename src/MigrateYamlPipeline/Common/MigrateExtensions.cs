@@ -144,5 +144,33 @@ namespace MigrateYamlPipeline.Common
 
             return "Test";
         }
+
+        /// <summary>
+        /// Retrieves the variableValue from the variables YamlNode.
+        /// </summary>
+        /// <param name="stage">The YamlNode representing the stage.</param>
+        /// <returns>The environment.</returns>
+        public static string GetVariableValue(this YamlNode variables, string variableName)
+        {
+            if (variables.NodeType == YamlNodeType.Sequence)
+            {
+                var variablesNode = (YamlSequenceNode)variables;
+                if (variablesNode.Children.Any(p => p["name"].ToString() == variableName))
+                {
+                    return variablesNode.Children.First(p => p["name"].ToString() == variableName)["value"].ToString();
+
+                }
+            }
+            else if (variables.NodeType == YamlNodeType.Mapping)
+            {
+                var variablesNode = (YamlMappingNode)variables;
+                if (variablesNode.Children.ContainsKey(new YamlScalarNode(variableName)))
+                {
+                    return variablesNode[new YamlScalarNode(variableName)].ToString();
+                }
+            }
+
+            return string.Empty;
+        }
     }
 }

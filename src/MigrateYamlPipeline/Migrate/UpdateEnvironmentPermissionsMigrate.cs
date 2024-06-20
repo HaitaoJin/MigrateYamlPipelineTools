@@ -34,31 +34,14 @@ namespace MigrateYamlPipeline.Migrate
                 if (((YamlMappingNode)stageNode).Children.ContainsKey(new YamlScalarNode("variables")))
                 {
                     var variables = stageNode["variables"];
+                    var environmentJobName = variables.GetVariableValue("ob_deploymentjob_environment");
 
-                    if (variables.NodeType == YamlNodeType.Sequence)
+                    if (!string.IsNullOrWhiteSpace(environmentJobName))
                     {
-                        var variablesNode = (YamlSequenceNode)stageNode["variables"];
-                        if (variablesNode.Children.Any(p => p["name"].ToString() == "ob_deploymentjob_environment"))
+                        var targetEnvironment = devOpsHttpClient.GetEnvironmentsAsync(environmentJobName).Result.FirstOrDefault();
+                        if (targetEnvironment != null)
                         {
-                            var environmentJobName = variablesNode.Children.First(p => p["name"].ToString() == "ob_deploymentjob_environment")["value"].ToString();
-                            var targetEnvironment = devOpsHttpClient.GetEnvironmentsAsync(environmentJobName).Result.FirstOrDefault();
-                            if (targetEnvironment != null)
-                            {
-                                await devOpsHttpClient.CopyRoleassignmentsAsync(sourceEnvironment, targetEnvironment);
-                            }
-                        }
-                    }
-                    else if(variables.NodeType == YamlNodeType.Mapping)
-                    {
-                        var variablesNode = (YamlMappingNode)stageNode["variables"];
-                        if (variablesNode.Children.ContainsKey(new YamlScalarNode("ob_deploymentjob_environment")))
-                        {
-                            var environmentJobName = variablesNode[new YamlScalarNode("ob_deploymentjob_environment")].ToString();
-                            var targetEnvironment = devOpsHttpClient.GetEnvironmentsAsync(environmentJobName).Result.FirstOrDefault();
-                            if (targetEnvironment != null)
-                            {
-                                await devOpsHttpClient.CopyRoleassignmentsAsync(sourceEnvironment, targetEnvironment);
-                            }
+                            await devOpsHttpClient.CopyRoleassignmentsAsync(sourceEnvironment, targetEnvironment);
                         }
                     }
                 }
