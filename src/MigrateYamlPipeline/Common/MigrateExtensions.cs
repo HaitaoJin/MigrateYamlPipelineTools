@@ -172,5 +172,20 @@ namespace MigrateYamlPipeline.Common
 
             return string.Empty;
         }
+
+        public static bool StageDisplayNameEquals(this string classicName, string yamlName)
+        {
+            if (string.Equals(classicName, yamlName, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            if (string.Equals(classicName.Replace(@"""", "").ToYamlPath(), yamlName, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

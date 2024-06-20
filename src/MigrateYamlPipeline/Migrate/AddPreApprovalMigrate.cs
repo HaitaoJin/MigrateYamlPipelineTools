@@ -30,7 +30,7 @@ namespace MigrateYamlPipeline.Migrate
             foreach (var stageNode in stages)
             {
                 var displayName = ((YamlScalarNode)stageNode["displayName"]).Value;
-                var approvals = classicStages.FirstOrDefault(p => p["Name"].ToString() == displayName)["PreDeployApprovals"]["Approvals"].AsArray().Where(p => p["IsAutomated"].ToString() == "false");
+                var approvals = classicStages.FirstOrDefault(p => p["Name"].ToString().StageDisplayNameEquals(displayName))["PreDeployApprovals"]["Approvals"].AsArray().Where(p => p["IsAutomated"].ToString() == "false");
                 if (approvals.Count() > 0)
                 {
                     // Env Add Pre Approval
