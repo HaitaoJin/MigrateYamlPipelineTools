@@ -13,7 +13,7 @@ namespace MigrateYamlPipeline
         [Option('y', "yaml", Required = true, HelpText = "Yaml Pipeline File Path")]
         public string YamlFilePath { get; set; }
 
-        [Option('c', "classic", Required = true, HelpText = "Classic Pipeline File Path")]
+        [Option('c', "classic", Required = false, HelpText = "Classic Pipeline File Path")]
         public string ClassicFilePath { get; set; }
 
         [Option('o', "output", Required = false, HelpText = "OutPut Yaml File Path [None/FilePath]")]

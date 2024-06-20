@@ -16,6 +16,7 @@ Update Environment Permissions:
 ```shell
 MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\ClassicPipeline.json" -o None --envpermissions --org xxx --project xxx --pat xxx --copyenv xxx
 ```
+> Batch update the Environment Permissions of all yml files in a folder: `MigrateYamlPipeline.exe -y "C:\pipeline" -o None --envpermissions --org xxx --project xxx --pat xxx --copyenv xxx`
 
 Add Pre Approval:
 
@@ -24,9 +25,10 @@ MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\Classi
 ```
 
 > Note: Personal Access Token (PAT) Scopes
-> - Environment - Read & manage 
-> - Pipeline Resources - Use and manage 
 > - Build - Read 
+> - Environment - Read & manage 
+> - Identity - Read
+> - Pipeline Resources - Use and manage 
 > - Security - Manage
 
 Additional command line arguments:

@@ -32,7 +32,11 @@ namespace MigrateYamlPipeline.Migrate
             this.rootNode = rootNode;
             this.newYamlFile = newYamlFile;
             stages = ((YamlSequenceNode)rootNode.Children["extends"]["parameters"]["stages"]).Children.ToList();
-            classicStages = classicPipeline["ReleaseDefinition"]["Environments"].AsArray();
+
+            if (classicPipeline != null)
+            {
+                classicStages = classicPipeline["ReleaseDefinition"]["Environments"].AsArray();
+            }
         }
 
         /// <summary>

@@ -22,14 +22,17 @@ namespace MigrateYamlPipeline.Common
         /// </summary>
         /// <param name="yamlFilePath">The path of the YAML file to migrate.</param>
         /// <param name="classicFilePath">The path of the classic pipeline file.</param>
-        public MigrateTool(string yamlFilePath, string classicFilePath)
+        public MigrateTool(string yamlFilePath, string? classicFilePath = null)
         {
             var reader = new StreamReader(yamlFilePath);
             yaml = new YamlStream();
             yaml.Load(reader);
             rootNode = (YamlMappingNode)yaml.Documents[0].RootNode;
 
-            classicPipeline = JsonNode.Parse(File.ReadAllText(classicFilePath));
+            if (!string.IsNullOrWhiteSpace(classicFilePath))
+            {
+                classicPipeline = JsonNode.Parse(File.ReadAllText(classicFilePath));
+            }
 
             newYamlFile = yamlFilePath.Replace(".yml", $"_new{DateTime.Now.ToString("MMddHHmmss")}.yml");
         }
