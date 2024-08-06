@@ -30,6 +30,16 @@ namespace MigrateYamlPipeline
                             SourceEnvironment = command.CopyEnvironment
                         }));
                     }
+                    if (command.IsUpdatePreApproval)
+                    {
+                        batchMigrateTool.AddMigrate(new UpdatePreApprovalMigrate(new UpdatePreApprovalMigrateOptions()
+                        {
+                            Organization = command.Organization,
+                            Project = command.Project,
+                            PAT = command.PAT,
+                            RequesterCannotBeApprover = command.RequesterCannotBeApprover
+                        }));
+                    }
                     await batchMigrateTool.Migrate(command.OutPutYamlFilePath);
                 }
                 return;

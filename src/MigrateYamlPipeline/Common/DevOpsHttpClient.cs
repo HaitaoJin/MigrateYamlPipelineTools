@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using YamlDotNet.Serialization;
 
 namespace MigrateYamlPipeline.Common
 {
@@ -125,6 +126,32 @@ namespace MigrateYamlPipeline.Common
                 await Console.Out.WriteLineAsync(await response.Content.ReadAsStringAsync());
             }
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<dynamic> GetPreApprovalAsync(string checkId)
+        {
+            HttpResponseMessage getResponse = await GetCacheAsync($"{Project}/_apis/pipelines/checks/configurations/{checkId}?api-version=7.1-preview.1&$expand=settings");
+            return JsonConvert.DeserializeObject<dynamic>(getResponse.Content.ReadAsStringAsync().Result);
+        }
+
+        public async Task<bool> UpdatePreApprovalAsync(string environmentId, string checkId, bool requesterCannotBeApprover)
+        {
+            var check = await GetPreApprovalAsync(checkId);
+            if (check.settings.requesterCannotBeApprover != requesterCannotBeApprover)
+            {
+                Console.WriteLine(check.resource.name);
+                check.settings.requesterCannotBeApprover = requesterCannotBeApprover;
+                string jsonStr = JsonConvert.SerializeObject(check);
+                StringContent content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await PatchAsync($"{Project}/_apis/pipelines/checks/configurations/{checkId}?api-version=7.1-preview.1", content);
+                await Console.Out.WriteLineAsync($"Add Approval check Result: {response.IsSuccessStatusCode}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    await Console.Out.WriteLineAsync(await response.Content.ReadAsStringAsync());
+                }
+                return response.IsSuccessStatusCode;
+            }
+            return true;
         }
 
         public async Task<List<IdentityDto>> GetApprovalUserIdAsync(string userDisplayName)

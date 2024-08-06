@@ -9,6 +9,8 @@ namespace MigrateYamlPipeline.Models
 {
     public class EnvironmentCheckDto
     {
+        [JsonProperty("id")]
+        public string Id { get; set; }
         [JsonProperty("type")]
         public EnvironmentCheckTypeDto Type { get; set; }
         [JsonProperty("resource")]

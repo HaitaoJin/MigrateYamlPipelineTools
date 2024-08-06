@@ -29,6 +29,12 @@ namespace MigrateYamlPipeline
         [Option("addpreapproval", Required = false, HelpText = "Is Add Pre Approval", Default = false, Group = "Add Pre Approval Option")]
         public bool IsAddPreApproval { get; set; }
 
+        [Option("updatepreapproval", Required = false, HelpText = "Is Update Pre Approval", Default = false, Group = "Update Pre Approval Option")]
+        public bool IsUpdatePreApproval { get; set; }
+
+        [Option("requestercannotbeapprover", Required = false, HelpText = "Requester Cannot Be Approver", Default = false, Group = "Update Pre Approval Option")]
+        public bool RequesterCannotBeApprover { get; set; }
+
         #region Update Environment Permissions
         [Option("envpermissions", Required = false, HelpText = "Is Update Environment Permissions", Default = false, Group = "Update Environment Permissions Option")]
         public bool IsUpdateEnvironmentPermissions { get; set; }

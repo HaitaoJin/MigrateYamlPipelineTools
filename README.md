@@ -14,7 +14,7 @@ MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\Classi
 Update Environment Permissions:
 
 ```shell
-MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -c "C:\pipeline\ClassicPipeline.json" -o None --envpermissions --org xxx --project xxx --pat xxx --copyenv xxx
+MigrateYamlPipeline.exe -y "C:\pipeline\YamlPipeline.yml" -o None --envpermissions --org xxx --project xxx --pat xxx --copyenv xxx
 ```
 > Batch update the Environment Permissions of all yml files in a folder: `MigrateYamlPipeline.exe -y "C:\pipeline" -o None --envpermissions --org xxx --project xxx --pat xxx --copyenv xxx`
 
